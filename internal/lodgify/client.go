@@ -20,9 +20,10 @@ type LodgifyClient struct {
 }
 
 type LodgifyClientArgs struct {
-	BaseURL string
-	APIKey  string
-	Logger  *zap.SugaredLogger
+	BaseURL    string
+	APIKey     string
+	Logger     *zap.SugaredLogger
+	HttpClient *http.Client
 }
 
 var (
@@ -31,8 +32,13 @@ var (
 )
 
 func NewClient(args LodgifyClientArgs) (LodgifyConnector, error) {
-	httpClient := &http.Client{
-		Timeout: time.Duration(5) * time.Second,
+
+	httpClient := args.HttpClient
+
+	if httpClient == nil {
+		httpClient = &http.Client{
+			Timeout: time.Duration(5) * time.Second,
+		}
 	}
 
 	lodgifyClient := LodgifyClient{
@@ -67,7 +73,7 @@ func (lodgify *LodgifyClient) GetBookings() ([]Booking, error) {
 		resp, err := lodgify.HttpClient.Do(req)
 
 		if err != nil {
-			return nil, fmt.Errorf("lodgify getbookings error creating request on page %d", i)
+			return nil, fmt.Errorf("lodgify getbookings error creating request on page %d: %w", i, err)
 		}
 
 		if resp.StatusCode > 201 {
