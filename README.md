@@ -24,7 +24,7 @@ GOOS=linux GOARCH=amd64 go build
 ./dump_bookings.exe path_to_excel.xlsx sheet_name
 ```
 
-## Tests
+## 🧪 Tests
 
 Tests are pretty barebones, really only ensures that the happy path works. 
 
