@@ -1,5 +1,5 @@
 package lodgify
 
 type LodgifyConnector interface {
-	GetBookings() (*BookingsResponse, error)
+	GetBookings() ([]Booking, error)
 }
